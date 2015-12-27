@@ -133,8 +133,8 @@ function processMessage($message) {
     $text = $message['text'];
 
     if (strpos($text, "/start") === 0) {
-      apiRequestJson("sendMessage", array('chat_id' => $chat_id, "text" => 'Hello', 'reply_markup' => array(
-        'keyboard' => array(array('Hello', 'Hi')),
+      apiRequestJson("sendMessage", array('chat_id' => $chat_id, "text" => 'Welcome! My name is ArduBot!', 'reply_markup' => array(
+        'keyboard' => array(array('Datasheet', 'Hi')),
         'one_time_keyboard' => true,
         'resize_keyboard' => true)));
     } else if ($text === "Hello" || $text === "Hi") {
@@ -143,8 +143,10 @@ function processMessage($message) {
       apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'Sorry but i not found anything for'.$text.'.'));
     } else if (strpos($text, "/stop") === 0) {
       // stop now
-    } else if(strpos($text, "/datasheet") === 0) {
+    } else if(strpos($text, "/datasheet") === 0 || $text === "Datasheet") {
       apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'The name of component?'));
+      $resultDatasheet = processDatasheet($text);
+      if($resultDatasheet )
     } else {
       // apiRequestWebhook("sendMessage", array('chat_id' => $chat_id, "reply_to_message_id" => $message_id, "text" => 'Cool'));
         apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => "Sorry, but i don't understand"));
