@@ -1,7 +1,17 @@
 <?php
 
-define('BOT_TOKEN', '123456:mytoken');
-define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/');
+/**
+* ArduBot - Search all datasheet of arduino component
+* @gabmanto - Mantovani Gabriele
+* 
+* Core file
+*/
+
+// Import config file with private key
+include 'set.php';
+
+// Import function for command /datasheet
+include 'datasheet.php';
 
 function apiRequestWebhook($method, $parameters) {
   if (!is_string($method)) {
@@ -117,6 +127,7 @@ function processMessage($message) {
   // process incoming message
   $message_id = $message['message_id'];
   $chat_id = $message['chat']['id'];
+    
   if (isset($message['text'])) {
     // incoming text message
     $text = $message['text'];
@@ -128,10 +139,15 @@ function processMessage($message) {
         'resize_keyboard' => true)));
     } else if ($text === "Hello" || $text === "Hi") {
       apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'Nice to meet you'));
+    } else if($datasheet === 1) {
+      apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'Sorry but i not found anything for'.$text.'.'));
     } else if (strpos($text, "/stop") === 0) {
       // stop now
+    } else if(strpos($text, "/datasheet") === 0) {
+      apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'The name of component?'));
     } else {
-      apiRequestWebhook("sendMessage", array('chat_id' => $chat_id, "reply_to_message_id" => $message_id, "text" => 'Cool'));
+      // apiRequestWebhook("sendMessage", array('chat_id' => $chat_id, "reply_to_message_id" => $message_id, "text" => 'Cool'));
+        apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => "Sorry, but i don't understand"));
     }
   } else {
     apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'I understand only text messages'));
@@ -139,7 +155,7 @@ function processMessage($message) {
 }
 
 
-define('WEBHOOK_URL', 'https://my-site.example.com/secret-path-for-webhooks/');
+define('WEBHOOK_URL', 'https://www.led04.it/bot/'.BOT_TOKEN.'/botarduino.php');
 
 if (php_sapi_name() == 'cli') {
   // if run from console, set or delete webhook
@@ -159,3 +175,23 @@ if (!$update) {
 if (isset($update["message"])) {
   processMessage($update["message"]);
 }
+
+
+
+/**
+* FOR DEBUG
+*/
+
+/*
+checkJSON($chatID,$update);
+
+
+function checkJSON($chatID,$update) {
+	$myFile = "log.txt";
+	$updateArray = print_r($update,TRUE);
+	$fh = fopen($myFile, 'a') or die("can't open file");
+	fwrite($fh, $chatID ."\n\n");
+	fwrite($fh, $updateArray."\n\n");
+	fclose($fh);
+}
+*/
