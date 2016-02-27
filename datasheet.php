@@ -4,7 +4,7 @@
 * ArduBot - Search all datasheet of arduino component
 * @gabmanto - Mantovani Gabriele
 * 
-* Command /datasheet
+* Command /datasheet 
 */
 
 
